@@ -1,4 +1,10 @@
 module.exports = [
+  {
+    name: 'strapi::cors',
+    config: {
+      origin: ['http://localhost:5173'], // Autorise Vue.js
+    },
+  },
   'strapi::logger',
   'strapi::errors',
   'strapi::security',
