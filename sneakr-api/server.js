@@ -61,7 +61,48 @@ app.get('/sneakrs', (req, res) => {
     });
 });
 
+// Route GET pour récupérer toutes les collections
+app.get('/collections', (req, res) => {
+    const query = 'SELECT * FROM collection';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des collections:', err);
+            res.status(500).json({ error: 'Erreur lors de la récupération des collections' });
+            return;
+        }
+        res.json(results);
+    });
+});
+
+// Route POST pour ajouter une nouvelle collection
+app.post('/collections', (req, res) => {
+    const { name, description } = req.body;
+    const query = 'INSERT INTO collection (name, description) VALUES (?, ?)';
+    db.query(query, [name, description], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de l\'ajout de la collection:', err);
+            res.status(500).json({ error: 'Erreur lors de l\'ajout de la collection' });
+            return;
+        }
+        res.status(201).json({ id: results.insertId, name, description });
+    });
+});
+
+// Route PUT pour mettre à jour une collection existante
+app.put('/collections/:id', (req, res) => {
+    const { id } = req.params;
+    const { name, description } = req.body;
+    const query = 'UPDATE collection SET name = ?, description = ? WHERE id = ?';
+    db.query(query, [name, description, id], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la mise à jour de la collection:', err);
+            res.status(500).json({ error: 'Erreur lors de la mise à jour de la collection' });
+            return;
+        }
+        res.json({ id, name, description });
+    });
+});
+
 app.listen(port, () => {
     console.log(`Serveur démarré sur le port ${port}`);
 });
-
