@@ -61,8 +61,8 @@ app.get('/sneakrs', (req, res) => {
     });
 });
 
-// Route GET pour récupérer toutes les collections
-app.get('/collections', (req, res) => {
+// Route GET pour récupérer tous les items de la collection
+app.get('/collection', (req, res) => {
     const query = 'SELECT * FROM collection';
     db.query(query, (err, results) => {
         if (err) {
@@ -74,32 +74,72 @@ app.get('/collections', (req, res) => {
     });
 });
 
-// Route POST pour ajouter une nouvelle collection
-app.post('/collections', (req, res) => {
-    const { name, description } = req.body;
-    const query = 'INSERT INTO collection (name, description) VALUES (?, ?)';
-    db.query(query, [name, description], (err, results) => {
+// Route POST pour ajouter un nouvel item à la collection
+app.post('/collection', (req, res) => {
+    const { user_id, sneaker_id } = req.body;
+    const query = 'INSERT INTO collection (user_id, sneaker_id) VALUES (?, ?)';
+    db.query(query, [user_id, sneaker_id], (err, results) => {
         if (err) {
             console.error('Erreur lors de l\'ajout de la collection:', err);
             res.status(500).json({ error: 'Erreur lors de l\'ajout de la collection' });
             return;
         }
-        res.status(201).json({ id: results.insertId, name, description });
+        res.status(201).json({ id: results.insertId, user_id, sneaker_id });
     });
 });
 
-// Route PUT pour mettre à jour une collection existante
-app.put('/collections/:id', (req, res) => {
-    const { id } = req.params;
-    const { name, description } = req.body;
-    const query = 'UPDATE collection SET name = ?, description = ? WHERE id = ?';
-    db.query(query, [name, description, id], (err, results) => {
+// Route DELETE pour supprimer un item de la collection
+app.delete('/collection/:id', (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM collection WHERE id = ?';
+    db.query(query, [id], (err, results) => {
         if (err) {
-            console.error('Erreur lors de la mise à jour de la collection:', err);
-            res.status(500).json({ error: 'Erreur lors de la mise à jour de la collection' });
+            console.error('Erreur lors de la suppression de la collection:', err);
+            res.status(500).json({ error: 'Erreur lors de la suppression de la collection' });
             return;
         }
-        res.json({ id, name, description });
+        res.json({ id });
+    });
+});
+
+// Route GET pour récupérer tous les items de la wishlist
+app.get('/wishlist', (req, res) => {
+    const query = 'SELECT * FROM wishlist';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération de la wishlist:', err);
+            res.status(500).json({ error: 'Erreur lors de la récupération de la wishlist' });
+            return;
+        }
+        res.json(results);
+    });
+});
+
+// Route POST pour ajouter un nouvel item à la wishlist
+app.post('/wishlist', (req, res) => {
+    const { user_id, sneaker_id } = req.body;
+    const query = 'INSERT INTO wishlist (user_id, sneaker_id) VALUES (?, ?)';
+    db.query(query, [user_id, sneaker_id], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de l\'ajout à la wishlist:', err);
+            res.status(500).json({ error: 'Erreur lors de l\'ajout à la wishlist' });
+            return;
+        }
+        res.status(201).json({ id: results.insertId, user_id, sneaker_id });
+    });
+});
+
+// Route DELETE pour supprimer un item de la wishlist
+app.delete('/wishlist/:id', (req, res) => {
+    const id = req.params.id;
+    const query = 'DELETE FROM wishlist WHERE id = ?';
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la suppression de la wishlist:', err);
+            res.status(500).json({ error: 'Erreur lors de la suppression de la wishlist' });
+            return;
+        }
+        res.json({ id });
     });
 });
 
