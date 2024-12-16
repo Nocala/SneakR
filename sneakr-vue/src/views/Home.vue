@@ -25,8 +25,4 @@ export default {
     text-align: center;
     padding: 20px;
 }
-
-header {
-    /* Add your header styles here */
-}
 </style>

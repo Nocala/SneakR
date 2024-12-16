@@ -25,7 +25,7 @@ footer {
   padding: 1rem;
   text-align: center;
   border-top: 2px solid #fff;
-  position: fixed;
+  position:-ms-page;
   width: 100%;
   bottom: 0;
 }
