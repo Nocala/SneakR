@@ -331,6 +331,7 @@ app.delete('/users/:id', verifyRole('admin'), (req, res) => {
     });
 });
 
+// Route GET pour récupérer toutes les sneakers
 app.get('/sneakrs', (req, res) => {
     const page = parseInt(req.query.page, 10) || 1; // Page par défaut : 1
     const limit = parseInt(req.query.limit, 10) || 50; // Limite par défaut : 16
