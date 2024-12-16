@@ -1,15 +1,23 @@
 <template>
   <div>
+    <Header />
     <router-view></router-view>
+    <Footer />
   </div>
 </template>
 
 <script>
-export default {
-  // Pas besoin de déclarer des composants ici
-}
-</script>
+import Header from './components/Header.vue'
+import Footer from './components/Footer.vue'
 
+export default {
+  components: {
+    Header,
+    Footer
+  }
+}
+
+</script>
 <style>
 
 </style>
