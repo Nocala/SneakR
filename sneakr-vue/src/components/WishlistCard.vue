@@ -4,11 +4,14 @@
     <h3>{{ sneaker.Name }}</h3>
     <p>{{ sneaker.Brand }}</p>
     <p>{{ sneaker.Estimated_Market_Value }} $</p>
-    <button class="discover-button">Discover</button>
+    <button class="discover-button">See details</button>
+    <button class="remove-button" @click="removeSneaker">Remove</button>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'WishlistCard',
   props: {
@@ -19,6 +22,29 @@ export default {
   },
   mounted() {
     console.log('Sneaker data:', this.sneaker); // Log the sneaker data
+  },
+  methods: {
+    async removeSneaker() {
+      try {
+        console.log('Trying to remove sneaker with ID:', this.sneaker.id);
+
+        const response = await axios.delete(`http://localhost:3000/wishlist/${this.sneaker.id}`, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('Response:', response);
+
+        if (response.status !== 200) {
+          throw new Error('Failed to remove sneaker from wishlist');
+        }
+
+        this.$emit('sneaker-removed', this.sneaker.id);
+      } catch (error) {
+        console.error('Error removing sneaker:', error);
+      }
+    }
   }
 }
 </script>
@@ -65,5 +91,21 @@ export default {
 
 .discover-button:hover {
   background-color: #0056b3;
+}
+
+.remove-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.remove-button:hover {
+  background-color: #cc0000;
 }
 </style>

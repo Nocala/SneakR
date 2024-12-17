@@ -471,14 +471,21 @@ app.delete('/collection/:id', (req, res) => {
 
 // Route GET pour récupérer tous les items de la wishlist
 app.get('/wishlist', (req, res) => {
-    const query = 'SELECT * FROM wishlist';
-    db.query(query, (err, results) => {
+    const userId = req.query.user_id;
+
+    if (!userId) {
+        return res.status(400).json({ error: "L'ID de l'utilisateur est requis" });
+    }
+
+    const query = 'SELECT * FROM wishlist WHERE user_id = ?';
+
+    db.query(query, [userId], (err, results) => {
         if (err) {
-            console.error('Erreur lors de la récupération de la wishlist:', err);
-            res.status(500).json({ error: 'Erreur lors de la récupération de la wishlist' });
-            return;
+            console.error("Erreur lors de la récupération de la wishlist :", err);
+            return res.status(500).json({ error: 'Erreur serveur' });
         }
-        res.json(results);
+
+        res.json(results); // Retourner seulement les éléments de la wishlist pour cet utilisateur
     });
 });
 
@@ -501,16 +508,22 @@ app.post('/wishlist', (req, res) => {
   });
 
 // Route DELETE pour supprimer un item de la wishlist
-app.delete('/wishlist/:id', (req, res) => {
-    const id = req.params.id;
-    const query = 'DELETE FROM wishlist WHERE id = ?';
-    db.query(query, [id], (err, results) => {
+app.delete('/wishlist/:sneaker_id', (req, res) => {
+    const sneakerId = req.params.sneaker_id;
+    console.log('ID reçu pour suppression:', sneakerId); // Log ID reçu
+
+    const query = 'DELETE FROM wishlist WHERE sneaker_id = ?';
+    db.query(query, [sneakerId], (err, results) => {
         if (err) {
             console.error('Erreur lors de la suppression de la wishlist:', err);
-            res.status(500).json({ error: 'Erreur lors de la suppression de la wishlist' });
-            return;
+            return res.status(500).json({ error: 'Erreur lors de la suppression de la wishlist' });
         }
-        res.json({ id });
+        console.log('Résultat suppression:', results);
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Aucune ligne trouvée avec ce sneaker_id.' });
+        }
+
+        res.json({ success: true, sneaker_id: sneakerId });
     });
 });
 
