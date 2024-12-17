@@ -35,6 +35,7 @@ export default {
         const data = response.data;
         if (data.token) {
           localStorage.setItem('token', data.token);
+          localStorage.setItem('userId', data.userId); // Stocker l'ID de l'utilisateur
           alert('Login successful');
         } else {
           alert('Login failed: ' + data.error);

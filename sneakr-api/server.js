@@ -131,45 +131,45 @@ app.post('/users', (req, res) => {
 
 // Route pour se connecter
 app.post('/login', (req, res) => {
-    const { email, password } = req.body;
-  
-    const query = 'SELECT * FROM users WHERE email = ?';
-    db.query(query, [email], (err, results) => {
+  const { email, password } = req.body;
+
+  const query = 'SELECT * FROM users WHERE email = ?';
+  db.query(query, [email], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: 'Erreur interne du serveur' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+
+    const user = results[0];
+
+    // Vérifie le mot de passe
+    bcrypt.compare(password, user.password, (err, isMatch) => {
       if (err) {
-        return res.status(500).json({ error: 'Erreur interne du serveur' });
+        return res.status(500).json({ error: 'Erreur de vérification du mot de passe' });
       }
-  
-      if (results.length === 0) {
-        return res.status(404).json({ error: 'Utilisateur non trouvé' });
+
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Mot de passe incorrect' });
       }
-  
-      const user = results[0];
-  
-      // Vérifie le mot de passe
-      bcrypt.compare(password, user.password, (err, isMatch) => {
-        if (err) {
-          return res.status(500).json({ error: 'Erreur de vérification du mot de passe' });
-        }
-  
-        if (!isMatch) {
-          return res.status(401).json({ error: 'Mot de passe incorrect' });
-        }
-  
-        // Ajoute le rôle de l'utilisateur dans le payload
-        const payload = {
-          id: user.id,
-          email: user.email,
-          role: user.role,  // Ajoute le rôle ici
-        };
-  
-        // Génère le token
-        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
-  
-        // Envoie le token au client
-        res.json({ token });
-      });
+
+      // Ajoute le rôle de l'utilisateur dans le payload
+      const payload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,  // Ajoute le rôle ici
+      };
+
+      // Génère le token
+      const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
+
+      // Envoie le token et l'ID de l'utilisateur au client
+      res.json({ token, userId: user.id });
     });
   });
+});
 
 // Route pour récupérer tous les utilisateurs
 app.get('/users', verifyRole('admin'), (req, res) => {
@@ -426,16 +426,20 @@ app.get('/wishlist', (req, res) => {
 // Route POST pour ajouter un nouvel item à la wishlist
 app.post('/wishlist', (req, res) => {
     const { user_id, sneaker_id } = req.body;
+  
+    if (!user_id || !sneaker_id) {
+      return res.status(400).json({ error: 'User ID and Sneaker ID are required' });
+    }
+  
     const query = 'INSERT INTO wishlist (user_id, sneaker_id) VALUES (?, ?)';
     db.query(query, [user_id, sneaker_id], (err, results) => {
-        if (err) {
-            console.error('Erreur lors de l\'ajout à la wishlist:', err);
-            res.status(500).json({ error: 'Erreur lors de l\'ajout à la wishlist' });
-            return;
-        }
-        res.status(201).json({ id: results.insertId, user_id, sneaker_id });
+      if (err) {
+        console.error('Error inserting into wishlist:', err);
+        return res.status(500).json({ error: 'Failed to add to wishlist' });
+      }
+      res.status(201).json({ message: 'Sneaker added to wishlist', results });
     });
-});
+  });
 
 // Route DELETE pour supprimer un item de la wishlist
 app.delete('/wishlist/:id', (req, res) => {
