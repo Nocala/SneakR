@@ -250,6 +250,48 @@ app.post('/users', verifyRole('admin'), (req, res) => {
     });
 });
 
+// Route pour obtenir les informations de l'utilisateur actuellement connecté
+app.get('/users/me', (req, res) => {
+    const userId = req.user.id; // Assurez-vous que l'ID de l'utilisateur est disponible dans req.user
+
+    const query = 'SELECT username, email FROM users WHERE id = ?';
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des informations de l\'utilisateur :', err);
+            res.status(500).json({ error: 'Erreur interne du serveur.' });
+            return;
+        }
+
+        if (results.length === 0) {
+            res.status(404).json({ error: 'Utilisateur non trouvé.' });
+            return;
+        }
+
+        res.status(200).json(results[0]);
+    });
+});
+
+// Route pour récupérer un utilisateur spécifique par son ID
+app.get('/users/:id', (req, res) => {
+    const userId = req.params.id;
+
+    const query = 'SELECT id, username, email FROM users WHERE id = ?';
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération de l\'utilisateur :', err);
+            res.status(500).json({ error: 'Erreur interne du serveur.' });
+            return;
+        }
+
+        if (results.length === 0) {
+            res.status(404).json({ error: 'Utilisateur non trouvé.' });
+            return;
+        }
+
+        res.json(results[0]);
+    });
+});
+
 // Route pour modifier un utilisateur
 app.put('/users/:id', verifyRole('admin'), (req, res) => {
     const userId = req.params.id;
@@ -331,20 +373,37 @@ app.delete('/users/:id', verifyRole('admin'), (req, res) => {
     });
 });
 
-// Route GET pour récupérer toutes les sneakers
+// Route GET pour récupérer toutes les sneakers ou filtrer par IDs
 app.get('/sneakrs', (req, res) => {
     const page = parseInt(req.query.page, 10) || 1; // Page par défaut : 1
-    const limit = parseInt(req.query.limit, 10) || 50; // Limite par défaut : 16
+    const limit = parseInt(req.query.limit, 10) || 50; // Limite par défaut : 50
     const offset = (page - 1) * limit;
- 
-    const query = 'SELECT * FROM sneakers LIMIT ? OFFSET ?';
-    db.query(query, [limit, offset], (err, results) => {
+    const ids = req.query.ids ? req.query.ids.split(',') : null;
+
+    let query = 'SELECT * FROM sneakers';
+    let queryParams = [];
+
+    if (ids) {
+        query += ' WHERE id IN (?)';
+        queryParams.push(ids);
+    } else {
+        query += ' LIMIT ? OFFSET ?';
+        queryParams.push(limit, offset);
+    }
+
+    query += ' LIMIT ? OFFSET ?';
+    queryParams.push(limit, offset);
+
+    db.query(query, queryParams, (err, results) => {
         if (err) {
             console.error('Erreur lors de la récupération des produits:', err);
             res.status(500).json({ error: 'Erreur lors de la récupération des produits' });
             return;
         }
- 
+        
+        res.json({ data: results }); // Pas besoin des infos de pagination quand on filtre par IDs
+
+
         // Comptage total des produits pour la pagination
         const countQuery = 'SELECT COUNT(*) AS total FROM sneakers';
         db.query(countQuery, (countErr, countResults) => {
@@ -353,10 +412,10 @@ app.get('/sneakrs', (req, res) => {
                 res.status(500).json({ error: 'Erreur lors du comptage des produits' });
                 return;
             }
- 
+
             const total = countResults[0].total;
             const totalPages = Math.ceil(total / limit);
- 
+
             res.json({
                 data: results,
                 pagination: {
