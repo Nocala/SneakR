@@ -46,7 +46,7 @@ export default {
         console.log('IDs envoyés à l\'API:', sneakerIds.join(','));
 
         if (sneakerIds.length > 0) {
-          const sneakersResponse = await axios.get(`http://localhost:3000/sneakrs`, {
+          const sneakersResponse = await axios.get(`http://localhost:3000/sneakrs/by-ids`, {
             params: {
               ids: sneakerIds.join(',')
             }
@@ -83,8 +83,8 @@ export default {
   handleSneakerRemoved(sneakerId) {
     console.log('ID supprimé reçu:', sneakerId);
     this.wishlist = this.wishlist.filter(s => s.id !== sneakerId);
+    }
   }
-}
 };
 </script>
 

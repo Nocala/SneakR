@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors')
 const mysql = require('mysql2');
+const pool = require('./db');
 
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
@@ -127,7 +128,6 @@ app.post('/users', (req, res) => {
         });
     });
 });
-
 
 // Route pour se connecter
 app.post('/login', (req, res) => {
@@ -373,44 +373,26 @@ app.delete('/users/:id', verifyRole('admin'), (req, res) => {
     });
 });
 
-// Route GET pour récupérer toutes les sneakers ou filtrer par IDs
 app.get('/sneakrs', (req, res) => {
     const page = parseInt(req.query.page, 10) || 1; // Page par défaut : 1
     const limit = parseInt(req.query.limit, 10) || 50; // Limite par défaut : 50
     const offset = (page - 1) * limit;
-    const ids = req.query.ids ? req.query.ids.split(',') : null;
 
-    let query = 'SELECT * FROM sneakers';
-    let queryParams = [];
-
-    if (ids) {
-        query += ' WHERE id IN (?)';
-        queryParams.push(ids);
-    } else {
-        query += ' LIMIT ? OFFSET ?';
-        queryParams.push(limit, offset);
-    }
-
-    query += ' LIMIT ? OFFSET ?';
-    queryParams.push(limit, offset);
+    const query = 'SELECT * FROM sneakers LIMIT ? OFFSET ?';
+    const queryParams = [limit, offset];
 
     db.query(query, queryParams, (err, results) => {
         if (err) {
             console.error('Erreur lors de la récupération des produits:', err);
-            res.status(500).json({ error: 'Erreur lors de la récupération des produits' });
-            return;
+            return res.status(500).json({ error: 'Erreur lors de la récupération des produits' });
         }
-        
-        res.json({ data: results }); // Pas besoin des infos de pagination quand on filtre par IDs
-
 
         // Comptage total des produits pour la pagination
         const countQuery = 'SELECT COUNT(*) AS total FROM sneakers';
         db.query(countQuery, (countErr, countResults) => {
             if (countErr) {
                 console.error('Erreur lors du comptage des produits:', countErr);
-                res.status(500).json({ error: 'Erreur lors du comptage des produits' });
-                return;
+                return res.status(500).json({ error: 'Erreur lors du comptage des produits' });
             }
 
             const total = countResults[0].total;
@@ -425,6 +407,24 @@ app.get('/sneakrs', (req, res) => {
                 },
             });
         });
+    });
+});
+
+app.get('/sneakrs/by-ids', (req, res) => {
+    const ids = req.query.ids ? req.query.ids.split(',') : null;
+
+    if (!ids) {
+        return res.status(400).json({ error: 'IDs are required to fetch specific sneakers' });
+    }
+
+    const query = 'SELECT * FROM sneakers WHERE id IN (?)';
+    db.query(query, [ids], (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération des sneakers par IDs:', err);
+            return res.status(500).json({ error: 'Erreur lors de la récupération des sneakers par IDs' });
+        }
+
+        res.json({ data: results });
     });
 });
 
