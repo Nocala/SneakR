@@ -96,6 +96,7 @@ export default {
   padding: 20px;
   background-color: #f5f5f5;
   font-family: Arial, sans-serif;
+  min-height: 100vh;
 }
 
 .profile-header {

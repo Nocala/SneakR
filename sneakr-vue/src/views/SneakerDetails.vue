@@ -1,18 +1,20 @@
 <template>
-    <div class="sneaker-details">
-        <div v-if="loading" class="loading">Chargement...</div>
-        <div v-else-if="error" class="error">{{ error }}</div>
-        <div v-else class="sneaker-info">
-            <h1>{{ sneaker.Name }}</h1>
-            <img :src="sneaker.Image_small" alt="Sneaker Image" />
-            <p><strong>Marque :</strong> {{ sneaker.Brand }}</p>
-            <p><strong>Valeur estimée :</strong> {{ sneaker.Estimated_Market_Value }} $</p>
-            <p><strong>Release year :</strong> {{ sneaker.Release_Year }}</p>
-            <p><strong>Colorway :</strong> {{ sneaker.Colorway }}</p>
+    <div class="collection-container">
+        <div class="sneaker-details">
+            <div v-if="loading" class="loading">Chargement...</div>
+            <div v-else-if="error" class="error">{{ error }}</div>
+            <div v-else class="sneaker-info">
+                <h1>{{ sneaker.Name }}</h1>
+                <img :src="sneaker.Image_small" alt="Sneaker Image" />
+                <p><strong>Marque :</strong> {{ sneaker.Brand }}</p>
+                <p><strong>Valeur estimée :</strong> {{ sneaker.Estimated_Market_Value }} $</p>
+                <p><strong>Release year :</strong> {{ sneaker.Release_Year }}</p>
+                <p><strong>Colorway :</strong> {{ sneaker.Colorway }}</p>
+            </div>
         </div>
-    </div>
-    <div class="collection-button">
-        <button @click="addToCollection">Ajouter à ma collection</button>
+        <div class="collection-button">
+            <button @click="addToCollection">Ajouter à ma collection</button>
+        </div>
     </div>
 </template>
 
@@ -88,6 +90,15 @@ export default {
 </script>
 
 <style scoped>
+.collection-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: 50px; /* Ajoute un espace en bas pour éviter que le bouton soit caché */
+
+}
 .sneaker-details {
     display: flex;
     flex-direction: column;
@@ -139,6 +150,7 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    margin-bottom: 7%;
 }
 
 .collection-button button {
