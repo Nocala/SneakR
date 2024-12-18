@@ -62,6 +62,7 @@ export default {
   padding: 20px;
   width: 200px;
   text-align: center;
+  margin-bottom: 10%;
 }
 
 .collection-card img {

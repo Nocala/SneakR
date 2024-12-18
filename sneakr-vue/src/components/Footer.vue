@@ -25,9 +25,10 @@ footer {
   padding: 1rem;
   text-align: center;
   border-top: 2px solid #fff;
-  position:-ms-page;
+  position: fixed;
   width: 100%;
   bottom: 0;
+  left: 0;
 }
 
 nav ul {

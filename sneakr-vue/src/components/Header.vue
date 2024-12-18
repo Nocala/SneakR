@@ -25,7 +25,7 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #E7E1CD;
+  background-color: #333;
   border-radius: 10px;
   margin-bottom: 5%;
 }
