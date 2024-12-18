@@ -60,6 +60,30 @@ export default {
             this.loading = false;
         }
     },
+
+    methods: {
+        async addToCollection() {
+            try {
+                const userId = this.getCurrentUserId();
+                if (!userId) {
+                    throw new Error('User ID not found');
+                }
+
+                const response = await axios.post('http://localhost:3000/collection', {
+                    user_id: userId,
+                    sneaker_id: this.sneaker.id
+                });
+
+                console.log('Sneaker added to collection:', response.data);
+            } catch (error) {
+                console.error('Error adding sneaker to collection:', error);
+            }
+        },
+
+        getCurrentUserId() {
+            return localStorage.getItem('userId');
+        },
+    },
 };
 </script>
 
@@ -76,7 +100,8 @@ export default {
     margin: 40px auto;
 }
 
-.loading, .error {
+.loading,
+.error {
     font-size: 1.2em;
     color: #ff6b6b;
     margin-top: 20px;
