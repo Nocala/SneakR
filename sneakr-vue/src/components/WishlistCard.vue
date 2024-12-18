@@ -1,16 +1,17 @@
 <template>
   <div class="wishlist-card">
+    <button class="remove-button" @click="removeFromWishlist"><strong>🚮</strong></button>
     <img :src="sneaker.Image_small" alt="Sneaker Image" />
     <h3>{{ sneaker.Name }}</h3>
     <p>{{ sneaker.Brand }}</p>
     <p>{{ sneaker.Estimated_Market_Value }} $</p>
-    <button class="details-button">See details</button>
-    <button class="remove-button" @click="removeSneaker">Remove</button>
+    <button class="discover-button" @click="navigateToDetails">Discover</button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'WishlistCard',
@@ -20,11 +21,12 @@ export default {
       required: true
     }
   },
-  mounted() {
-    console.log('Sneaker data:', this.sneaker); // Log the sneaker data
+  setup() {
+    const router = useRouter();
+    return { router };
   },
   methods: {
-    async removeSneaker() {
+    async removeFromWishlist() {
       try {
         console.log('Trying to remove sneaker with ID:', this.sneaker.id);
 
@@ -44,6 +46,10 @@ export default {
       } catch (error) {
         console.error('Error removing sneaker:', error);
       }
+    },
+
+    navigateToDetails() {
+      this.router.push({ name: 'SneakerDetails', params: { id: this.sneaker.id } });
     }
   }
 }
@@ -58,6 +64,22 @@ export default {
   padding: 20px;
   width: 200px;
   text-align: center;
+}
+
+.remove-button {
+  color: #ff0000;
+  font-size: x-large;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.remove-button img {
+  width: 30px;
+  height: 30px;
 }
 
 .wishlist-card img {
@@ -78,8 +100,8 @@ export default {
   margin: 5px 0;
 }
 
-.details-button {
-  width: 100%; /* Prend toute la largeur de la carte */
+.discover-button {
+  width: 100%;
   padding: 10px;
   background-color: #007bff;
   color: white;
@@ -89,23 +111,7 @@ export default {
   margin-top: 10px;
 }
 
-.details-button:hover {
+.discover-button:hover {
   background-color: #0056b3;
-}
-
-.remove-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
-}
-
-.remove-button:hover {
-  background-color: #cc0000;
 }
 </style>
