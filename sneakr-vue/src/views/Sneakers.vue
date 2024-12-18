@@ -1,12 +1,15 @@
 <template>
-  <div class="home">
+  <div class="sneakers-container">
     <main>
       <section class="featured">
         <h2>Featured Sneakers</h2>
+
         <input type="text" v-model="searchQuery" placeholder="Search sneakers..." class="search-bar" />
+
         <div class="sneaker-grid">
           <SneakerCard v-for="sneaker in filteredSneakers" :key="sneaker.id" :sneaker="sneaker" @discover-sneaker="goToSneakerPage"/>
         </div>
+
         <div class="pagination">
           <button @click="prevPage(1)" :disabled="page === 1">&lt; 1</button>
           <button @click="prevPage(5)" :disabled="page <= 5">&lt; 5</button>
@@ -16,6 +19,7 @@
           <button @click="nextPage(5)" :disabled="!hasMore">5 &gt;</button>
           <button @click="nextPage(10)" :disabled="!hasMore">10 &gt;</button>
         </div>
+
       </section>
     </main>
   </div>
@@ -31,6 +35,7 @@ export default {
   components: {
     SneakerCard
   },
+
   setup() {
     const sneakers = ref([])
     const page = ref(1)
@@ -51,14 +56,14 @@ export default {
     const nextPage = (increment) => {
       page.value += increment
       fetchSneakers()
-      window.scrollTo(0, 0) // Scroll to top
+      window.scrollTo(0, 0) 
     }
 
     const prevPage = (decrement) => {
       if (page.value > decrement) {
         page.value -= decrement
         fetchSneakers()
-        window.scrollTo(0, 0) // Scroll to top
+        window.scrollTo(0, 0) 
       }
     }
 
@@ -86,16 +91,17 @@ export default {
 
   methods: {
     goToSneakerPage(sneakerIdNav) {
-      this.$router.push(`/sneaker/${sneakerIdNav}`); // Redirige vers la page avec l'ID
+      this.$router.push(`/sneaker/${sneakerIdNav}`); 
     },
   },
 }
 </script>
 
 <style scoped>
-.home {
+.sneakers-container {
   text-align: center;
   padding: 20px;
+  margin-bottom: 10%;
 }
 
 .sneaker-grid {
@@ -106,10 +112,11 @@ export default {
 }
 
 .pagination {
-  margin-top: 20px;
+  margin-top: 3%;
   display: flex;
   justify-content: center;
   gap: 10px;
+  
 }
 
 .pagination button {
@@ -135,7 +142,7 @@ export default {
 }
 
 .search-bar {
-  width: 50%; /* Réduit la largeur de la barre de recherche */
+  width: 50%; 
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ddd;

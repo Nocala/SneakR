@@ -437,7 +437,7 @@ app.get('/collection', (req, res) => {
 
     const query = 'SELECT * FROM collection WHERE user_id = ?';
 
-    db.query(query, [userId], (err, results) => {
+    db.query(query, [userId], (err, results) => { // Passer userId comme paramètre
         if (err) {
             console.error('Erreur lors de la récupération des collections:', err);
             res.status(500).json({ error: 'Erreur lors de la récupération des collections' });

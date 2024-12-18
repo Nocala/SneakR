@@ -1,9 +1,9 @@
 <template>
       <div class="header">
-        <h1>Page de collection</h1>
+        <h1>Collection page</h1>
       </div>
       <div class="collection-container">
-        <h2>Collection</h2>
+        <h2>Your collection</h2>
         <div class="collection-cards">
           <CollectionCard v-for="sneaker in collection" :key="sneaker.id" :sneaker="sneaker" @sneaker-removed="handleSneakerRemoved"/>
         </div>
@@ -22,7 +22,7 @@
     },
     setup() {
       const user = ref({
-        username: 'Nom d\'utilisateur',
+        username: 'username_example',
         email: 'email@example.com'
       });
       const collection = ref([]);
@@ -39,7 +39,7 @@
   
           const sneakerIds = collectionItems.map(item => item.sneaker_id);
   
-          console.log('IDs envoyés à l\'API:', sneakerIds.join(','));
+          console.log('IDs sended to API:', sneakerIds.join(','));
   
           if (sneakerIds.length > 0) {
             const sneakersResponse = await axios.get(`http://localhost:3000/sneakrs/by-ids`, {
@@ -49,7 +49,7 @@
             });
             collection.value = sneakersResponse.data.data;
   
-            console.log('Sneakers récupérées:', collection.value);
+            console.log('Sneakers fetched:', collection.value);
   
           } else {
             collection.value = [];
@@ -77,7 +77,7 @@
     
     methods: {
     handleSneakerRemoved(sneakerId) {
-      console.log('ID supprimé reçu:', sneakerId);
+      console.log('ID deleted received:', sneakerId);
       this.collection = this.collection.filter(s => s.id !== sneakerId);
       }
     }

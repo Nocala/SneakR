@@ -1,16 +1,21 @@
 <template>
   <div class="login-container">
     <h1>Login</h1>
+
     <form @submit.prevent="login">
       <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">Email :</label>
         <input type="email" v-model="email" id="email" required>
       </div>
+
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">Password :</label>
         <input type="password" v-model="password" id="password" required>
       </div>
+
       <button type="submit" class="login-button">Login</button>
+      
+      <p>You don't have an account ? <router-link to="/register">Register Here</router-link></p>
     </form>
   </div>
 </template>
@@ -32,16 +37,20 @@ export default {
           email: this.email,
           password: this.password
         });
+
         const data = response.data;
         if (data.token) {
           localStorage.setItem('token', data.token);
-          localStorage.setItem('userId', data.userId); // Stocker l'ID de l'utilisateur
-          alert('Login successful');
+          localStorage.setItem('userId', data.userId);
+          this.$router.push('/');
+
         } else {
           alert('Login failed: ' + data.error);
         }
+
       } catch (error) {
         console.error('Error:', error);
+        alert('An error occurred during login');
       }
     }
   }
@@ -54,10 +63,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f5f5f5;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 
@@ -109,5 +114,21 @@ input {
 
 .login-button:hover {
   background-color: #0056b3;
+}
+
+p {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+}
+
+p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+p a:hover {
+  text-decoration: underline;
 }
 </style>

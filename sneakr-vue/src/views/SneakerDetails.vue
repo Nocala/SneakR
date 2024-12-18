@@ -1,19 +1,18 @@
 <template>
     <div class="collection-container">
         <div class="sneaker-details">
-            <div v-if="loading" class="loading">Chargement...</div>
-            <div v-else-if="error" class="error">{{ error }}</div>
-            <div v-else class="sneaker-info">
+
+            <div class="sneaker-info">
                 <h1>{{ sneaker.Name }}</h1>
                 <img :src="sneaker.Image_small" alt="Sneaker Image" />
-                <p><strong>Marque :</strong> {{ sneaker.Brand }}</p>
-                <p><strong>Valeur estimée :</strong> {{ sneaker.Estimated_Market_Value }} $</p>
+                <p><strong>Brand :</strong> {{ sneaker.Brand }}</p>
+                <p><strong>Estimated Value :</strong> {{ sneaker.Estimated_Market_Value }} $</p>
                 <p><strong>Release year :</strong> {{ sneaker.Release_Year }}</p>
                 <p><strong>Colorway :</strong> {{ sneaker.Colorway }}</p>
             </div>
         </div>
         <div class="collection-button">
-            <button @click="addToCollection">Ajouter à ma collection</button>
+            <button @click="addToCollection">Add to collection</button>
         </div>
     </div>
 </template>
@@ -31,33 +30,35 @@ export default {
     },
     data() {
         return {
-            sneaker: null, // Données de la sneaker
-            loading: true, // État de chargement
-            error: null, // Message d'erreur si problème
+            sneaker: null, 
+            loading: true, 
+            error: null, 
         };
     },
     async created() {
         const sneakerId = this.$route.params.id; // Récupère l'ID depuis l'URL
 
         if (!sneakerId) {
-            this.error = "ID de la sneaker non spécifié.";
+            this.error = "ID of sneaker not found.";
             this.loading = false;
             return;
         }
 
         try {
             const response = await axios.get(`http://localhost:3000/sneakrs/by-ids`, {
-                params: { ids: sneakerId }, // Utilise l'ID de la sneaker
+                params: { ids: sneakerId }, 
             });
 
             const sneakers = response.data.data;
             if (sneakers.length === 0) {
-                throw new Error('Sneaker non trouvée.');
+                throw new Error('Sneaker not found.');
             }
             this.sneaker = sneakers[0]; // La première sneaker correspond à l'ID
+
         } catch (err) {
-            this.error = "Impossible de charger les données de cette sneaker.";
+            this.error = "Impossible fetching sneaker.";
             console.error(err);
+
         } finally {
             this.loading = false;
         }
@@ -96,7 +97,7 @@ export default {
     align-items: center;
     flex-direction: column;
     min-height: 100vh;
-    padding-bottom: 50px; /* Ajoute un espace en bas pour éviter que le bouton soit caché */
+    padding-bottom: 50px; 
 
 }
 .sneaker-details {

@@ -6,7 +6,7 @@
         <li><router-link to="/login">Login</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
         <li><router-link to="/sneakers">Sneakers</router-link></li>
-        <li><router-link to="/collection">Collections</router-link></li>
+        <li><router-link to="/collection">Collection</router-link></li>
       </ul>
     </nav>
   </header>
@@ -27,7 +27,6 @@ header {
   padding: 10px;
   background-color: #333;
   border-radius: 10px;
-  margin-bottom: 5%;
 }
 
 nav ul {

@@ -1,20 +1,25 @@
 <template>
   <div class="register-container">
     <h1>Register</h1>
+
     <form @submit.prevent="register">
       <div class="form-group">
-        <label for="username">Username:</label>
+        <label for="username">Username :</label>
         <input type="text" v-model="username" id="username" required />
       </div>
+
       <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">Email :</label>
         <input type="email" v-model="email" id="email" required />
       </div>
+
       <div class="form-group">
-        <label for="password">Password:</label>
+        <label for="password">Password :</label>
         <input type="password" v-model="password" id="password" required />
       </div>
+
       <button type="submit" class="register-button">Register</button>
+      
     </form>
   </div>
 </template>
@@ -38,12 +43,16 @@ export default {
           email: this.email,
           password: this.password
         });
+
         const data = response.data;
         if (data.success) {
-          alert('Registration successful');
+          this.$router.push('/');
+
         } else {
+          this.$router.push('/');
           alert('Registration failed: ' + data.error);
         }
+
       } catch (error) {
         console.error('Error:', error);
       }
@@ -58,10 +67,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background-color: #f5f5f5;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 

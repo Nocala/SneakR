@@ -1,12 +1,14 @@
 <template>
   <footer>
-    <p>&copy; 2023 SneakR. Tous droits réservés.</p>
+    <p>&copy; 2024 SneakR Project. All rights reserved.</p>
     <nav>
       <ul>
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/login">Login</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
-        <li><router-link to="/test">Test</router-link></li>
+        <li><router-link to="/Sneakers">Sneakers</router-link></li>
+        <li><router-link to="/Collection">Collection</router-link></li>
+        <li><router-link to="/Register">Register</router-link></li>
       </ul>
     </nav>
   </footer>
@@ -24,7 +26,6 @@ footer {
   color: white;
   padding: 1rem;
   text-align: center;
-  border-top: 2px solid #fff;
   position: fixed;
   width: 100%;
   bottom: 0;

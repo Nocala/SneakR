@@ -1,8 +1,8 @@
 <template>
   <div class="profile-container">
     <div class="profile-header">
-      <h1>Profil de l'utilisateur</h1>
-      <p>Nom d'utilisateur : {{ user.username }}</p>
+      <h1>Your profile</h1>
+      <p>Username : {{ user.username }}</p>
       <p>Email : {{ user.email }}</p>
     </div>
     <div class="wishlist-container">
@@ -26,7 +26,7 @@ export default {
   },
   setup() {
     const user = ref({
-      username: 'Nom d\'utilisateur',
+      username: 'username_example',
       email: 'email@example.com'
     });
     const wishlist = ref([]);
@@ -43,7 +43,7 @@ export default {
 
         const sneakerIds = wishlistItems.map(item => item.sneaker_id);
 
-        console.log('IDs envoyés à l\'API:', sneakerIds.join(','));
+        console.log('IDs sended to API:', sneakerIds.join(','));
 
         if (sneakerIds.length > 0) {
           const sneakersResponse = await axios.get(`http://localhost:3000/sneakrs/by-ids`, {
@@ -53,7 +53,7 @@ export default {
           });
           wishlist.value = sneakersResponse.data.data;
 
-          console.log('Sneakers récupérées:', wishlist.value);
+          console.log('Sneakers fetched:', wishlist.value);
 
         } else {
           wishlist.value = [];
@@ -81,7 +81,7 @@ export default {
   
   methods: {
   handleSneakerRemoved(sneakerId) {
-    console.log('ID supprimé reçu:', sneakerId);
+    console.log('ID deleted received:', sneakerId);
     this.wishlist = this.wishlist.filter(s => s.id !== sneakerId);
     }
   }
@@ -94,7 +94,6 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #f5f5f5;
   font-family: Arial, sans-serif;
   min-height: 100vh;
 }
