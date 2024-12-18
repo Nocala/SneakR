@@ -5,7 +5,8 @@
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/login">Login</router-link></li>
         <li><router-link to="/profile">Profile</router-link></li>
-        <li><router-link to="/test">Test</router-link></li>
+        <li><router-link to="/sneakers">Sneakers</router-link></li>
+        <li><router-link to="/collection">Collections</router-link></li>
       </ul>
     </nav>
   </header>

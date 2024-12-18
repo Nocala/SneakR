@@ -7,7 +7,7 @@
     <h3>{{ sneaker.Name }}</h3>
     <p>{{ sneaker.Brand }}</p>
     <p>{{ sneaker.Estimated_Market_Value }} $</p>
-    <button class="discover-button"  @click="goToSneakerPage">Discover</button>
+    <button class="discover-button"  @click="emitDiscoverEvent">Discover</button>
   </div>
 </template>
 
@@ -29,22 +29,26 @@ export default {
         if (!userId) {
           throw new Error('User ID not found');
         }
+
         const response = await axios.post('http://localhost:3000/wishlist', {
           user_id: userId,
           sneaker_id: this.sneaker.id
         });
+
         console.log('Sneaker added to wishlist:', response.data);
       } catch (error) {
         console.error('Error adding sneaker to wishlist:', error);
       }
     },
+    
     getCurrentUserId() {
       return localStorage.getItem('userId');
     },
 
-    goToSneakerPage() {
-      this.$router.push(`/sneaker/${this.sneaker.id}`); // link vers la page produit
-    }
+    emitDiscoverEvent() {
+      const sneakerIdNav = this.sneaker.id;
+      this.$emit("discover-sneaker", sneakerIdNav); // Émet l'ID de la sneaker
+    },
   }
 }
 </script>

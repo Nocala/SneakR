@@ -5,7 +5,7 @@
         <h2>Featured Sneakers</h2>
         <input type="text" v-model="searchQuery" placeholder="Search sneakers..." class="search-bar" />
         <div class="sneaker-grid">
-          <SneakerCard v-for="sneaker in filteredSneakers" :key="sneaker.id" :sneaker="sneaker" />
+          <SneakerCard v-for="sneaker in filteredSneakers" :key="sneaker.id" :sneaker="sneaker" @discover-sneaker="goToSneakerPage"/>
         </div>
         <div class="pagination">
           <button @click="prevPage(1)" :disabled="page === 1">&lt; 1</button>
@@ -27,7 +27,7 @@ import { ref, computed, onMounted } from 'vue'
 import SneakerCard from '../components/SneakerCard.vue'
 
 export default {
-  name: 'Test',
+  name: 'Sneakers',
   components: {
     SneakerCard
   },
@@ -82,7 +82,13 @@ export default {
       nextPage,
       prevPage
     }
-  }
+  },
+
+  methods: {
+    goToSneakerPage(sneakerIdNav) {
+      this.$router.push(`/sneaker/${sneakerIdNav}`); // Redirige vers la page avec l'ID
+    },
+  },
 }
 </script>
 
