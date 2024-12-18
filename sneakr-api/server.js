@@ -427,6 +427,22 @@ app.get('/sneakrs/by-ids', (req, res) => {
     });
 });
 
+app.get('/sneaker/random', (req, res) => {
+    const query = 'SELECT * FROM sneakers ORDER BY RAND() LIMIT 1';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Erreur lors de la récupération de la sneaker aléatoire:', err);
+            return res.status(500).json({ error: 'Erreur lors de la récupération de la sneaker aléatoire' });
+        }
+
+        if (results.length > 0) {
+            res.json(results[0]); // Retourne la première sneaker si elle existe
+        } else {
+            res.status(404).json({ error: 'Aucune sneaker trouvée' });
+        }
+    });
+});
+
 // Route GET pour récupérer tous les items de la collection
 app.get('/collection', (req, res) => {
     const userId = req.query.user_id;
