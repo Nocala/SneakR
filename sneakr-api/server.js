@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors')
 const mysql = require('mysql2');
-const pool = require('./db');
 
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
@@ -430,8 +429,15 @@ app.get('/sneakrs/by-ids', (req, res) => {
 
 // Route GET pour récupérer tous les items de la collection
 app.get('/collection', (req, res) => {
-    const query = 'SELECT * FROM collection';
-    db.query(query, (err, results) => {
+    const userId = req.query.user_id;
+
+    if (!userId) {
+        return res.status(400).json({ error: "L'ID de l'utilisateur est requis" });
+    }
+
+    const query = 'SELECT * FROM collection WHERE user_id = ?';
+
+    db.query(query, [userId], (err, results) => {
         if (err) {
             console.error('Erreur lors de la récupération des collections:', err);
             res.status(500).json({ error: 'Erreur lors de la récupération des collections' });
@@ -456,16 +462,22 @@ app.post('/collection', (req, res) => {
 });
 
 // Route DELETE pour supprimer un item de la collection
-app.delete('/collection/:id', (req, res) => {
-    const id = req.params.id;
-    const query = 'DELETE FROM collection WHERE id = ?';
-    db.query(query, [id], (err, results) => {
+app.delete('/collection/:sneaker_id', (req, res) => {
+    const sneakerId = req.params.sneaker_id;
+    console.log('ID reçu pour suppression:', sneakerId); // Log ID reçu 
+    
+    const query = 'DELETE FROM collection WHERE sneaker_id = ?';
+    db.query(query, [sneakerId], (err, results) => {
         if (err) {
             console.error('Erreur lors de la suppression de la collection:', err);
-            res.status(500).json({ error: 'Erreur lors de la suppression de la collection' });
-            return;
+            return res.status(500).json({ error: 'Erreur lors de la suppression de la collection' });
         }
-        res.json({ id });
+        console.log('Résultat suppression:', results);
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Aucune ligne trouvée avec ce sneaker_id.' });
+        }
+
+        res.json({ success: true, sneaker_id: sneakerId });
     });
 });
 

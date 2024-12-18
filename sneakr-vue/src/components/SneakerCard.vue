@@ -7,7 +7,7 @@
     <h3>{{ sneaker.Name }}</h3>
     <p>{{ sneaker.Brand }}</p>
     <p>{{ sneaker.Estimated_Market_Value }} $</p>
-    <button class="discover-button">Discover</button>
+    <button class="discover-button"  @click="goToSneakerPage">Discover</button>
   </div>
 </template>
 
@@ -40,6 +40,10 @@ export default {
     },
     getCurrentUserId() {
       return localStorage.getItem('userId');
+    },
+
+    goToSneakerPage() {
+      this.$router.push(`/sneaker/${this.sneaker.id}`); // link vers la page produit
     }
   }
 }

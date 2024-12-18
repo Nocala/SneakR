@@ -4,6 +4,8 @@ import Test from '../views/Test.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
+import Collection from '../views/Collection.vue'
+
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -11,6 +13,7 @@ const routes = [
   { path: '/login', name: 'Login', component: Login },
   { path: '/register', name: 'Register', component: Register },
   { path: '/profile', name: 'Profile', component: Profile },
+  { path: '/collection', name: 'Collection', component: Collection },
 ]
 
 const router = createRouter({

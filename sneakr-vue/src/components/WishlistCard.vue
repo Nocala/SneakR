@@ -4,7 +4,7 @@
     <h3>{{ sneaker.Name }}</h3>
     <p>{{ sneaker.Brand }}</p>
     <p>{{ sneaker.Estimated_Market_Value }} $</p>
-    <button class="discover-button">See details</button>
+    <button class="details-button">See details</button>
     <button class="remove-button" @click="removeSneaker">Remove</button>
   </div>
 </template>
@@ -78,7 +78,7 @@ export default {
   margin: 5px 0;
 }
 
-.discover-button {
+.details-button {
   width: 100%; /* Prend toute la largeur de la carte */
   padding: 10px;
   background-color: #007bff;
@@ -89,7 +89,7 @@ export default {
   margin-top: 10px;
 }
 
-.discover-button:hover {
+.details-button:hover {
   background-color: #0056b3;
 }
 
